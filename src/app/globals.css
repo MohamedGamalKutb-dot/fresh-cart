@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-exo);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -116,6 +116,10 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+@theme{
+  --color-main-color:#16A34A;
+  --color-hover-color:#15803D;
+}
 
 @layer base {
   * {
@@ -127,4 +131,45 @@
   html {
     @apply font-sans;
   }
+    button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Custom Swiper Pagination Styles for HeroSlider */
+.custom-bullet {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.swiper-pagination-bullet-active.custom-bullet {
+  width: 24px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+.swiper-pagination {
+  position: absolute;
+  bottom: 20px !important;
+  z-index: 10;
+}
+
+/* ───── 3D Flip Utilities ───── */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
