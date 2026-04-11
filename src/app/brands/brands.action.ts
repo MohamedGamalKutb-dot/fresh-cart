@@ -4,7 +4,7 @@ import { AllBrandsResponse, BrandsData } from "./brands.interface";
 
 export async function getAllBrandsAction(): Promise<BrandsData[]> {
   const brandsRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/brands`,
+    `/api/v1/brands`,
     { next: { revalidate: 3600 } }
   );
 

@@ -4,7 +4,7 @@ import { AllproductsData, AllproductsResponse } from "@/app/home.interface";
 import { CategoriesData } from "@/app/category/category.interface";
 
 export async function getCategoryDetailsAction(id: string): Promise<CategoriesData> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/categories/${id}`, {
+  const response = await fetch(`/api/v1/categories/${id}`, {
     next: { revalidate: 3600 },
   });
   if (!response.ok) throw new Error("Failed to fetch category details");
@@ -13,7 +13,7 @@ export async function getCategoryDetailsAction(id: string): Promise<CategoriesDa
 }
 
 export async function getProductsByCategoryAction(id: string): Promise<AllproductsData[]> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/products?category[in]=${id}`, {
+  const response = await fetch(`/api/v1/products?category[in]=${id}`, {
     next: { revalidate: 3600 },
   });
   if (!response.ok) throw new Error("Failed to fetch products for category");
