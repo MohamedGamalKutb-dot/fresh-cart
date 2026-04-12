@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import AppButton from "@/components/shared/AppButton/AppButton";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { useRef, useCallback, useState } from "react";
 import {
   ShoppingBag,
@@ -95,8 +96,8 @@ export default function CartClient() {
     );
   }
 
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const isAuth = !!token;
+  const { data: session, status } = useSession();
+  const isAuth = status === "authenticated";
 
   // Ensure items is always a valid array
   const rawItems = isAuth ? cart?.products : guestCart;

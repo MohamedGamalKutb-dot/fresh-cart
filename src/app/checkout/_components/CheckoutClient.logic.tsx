@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 
 export function useCheckoutLogic() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const { cart, guestCart, isMounted, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "card">("cash");
   const [addressMode, setAddressMode] = useState<"saved" | "new">("new");
@@ -30,21 +32,25 @@ export function useCheckoutLogic() {
   });
 
   // Authenticated state is required for checkout
-  const isAuth = typeof window !== "undefined" && !!localStorage.getItem("token");
+  const isAuth = status === "authenticated";
 
   useEffect(() => {
     if (isMounted) {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      if (status === "unauthenticated") {
         router.push("/login");
         return;
       }
 
+      if (status === "loading") return;
+
+      const token = (session as any)?.accessToken;
+      if (!token) return;
+
       // Fetch last order to get real user address
       const fetchLastOrder = async () => {
         try {
-          const payload = JSON.parse(atob(token.split(".")[1]));
-          const userId = payload.id;
+          const userId = (session?.user as any)?.id;
+          if (!userId) return;
           const orders = await getUserOrders(userId);
 
           if (orders && orders.length > 0) {
@@ -67,7 +73,7 @@ export function useCheckoutLogic() {
 
       fetchLastOrder();
     }
-  }, [isMounted, router]);
+  }, [isMounted, router, status, session]);
 
   // Handle switching between saved and new address
   const toggleAddressMode = (mode: "saved" | "new") => {
@@ -120,7 +126,7 @@ export function useCheckoutLogic() {
     const toastId = toast.loading("Processing your order...");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = (session as any)?.accessToken;
       if (!token) {
         toast.dismiss(toastId);
         router.push("/login");
