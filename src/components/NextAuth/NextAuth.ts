@@ -101,10 +101,20 @@ export const authOptions: NextAuthOptions = {
 
           if (res.ok && data.token) {
             token.accessToken = data.token;
+            // Decode the Route token to securely get the real Mongo _id
+            let routeUserId = data.user?._id || user.id;
+            try {
+              const payload = data.token.split('.')[1];
+              const decoded = JSON.parse(Buffer.from(payload, 'base64').toString('utf-8'));
+              routeUserId = decoded.id || routeUserId;
+            } catch (e) {
+              console.error("Failed to decode token for ID", e);
+            }
+
             token.user = {
-              id: data.user._id || user.id,
-              name: data.user.name || user.name,
-              email: data.user.email || user.email,
+              id: routeUserId,
+              name: data.user?.name || user.name,
+              email: data.user?.email || user.email,
             };
           } else {
              console.error("Route backend syncing failed:", data);
