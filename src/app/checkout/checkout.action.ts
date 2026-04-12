@@ -1,6 +1,6 @@
 "use server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
 
 // 1. Create Cash Order From Cart (v2)
 export async function createCashOrderFromCartV2Action(cartId: string, shippingAddress: { details: string, phone: string, city: string }, token: string) {

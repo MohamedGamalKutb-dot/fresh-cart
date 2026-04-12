@@ -1,6 +1,6 @@
 "use server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';|| 'https://ecommerce.routemisr.com';
 
 /**
  * Add product to user wishlist

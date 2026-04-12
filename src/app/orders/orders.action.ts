@@ -2,7 +2,7 @@
 
 import { Order } from "./orders.interface";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
 
 export async function getUserOrdersAction(userId: string): Promise<Order[]> {
   try {

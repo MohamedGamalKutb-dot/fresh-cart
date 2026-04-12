@@ -2,7 +2,7 @@
 
 import { CartResponse } from "./cart.interface";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';|| 'https://ecommerce.routemisr.com';
 
 /**
  * Get logged user cart

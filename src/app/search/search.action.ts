@@ -3,7 +3,7 @@
 import { AllproductsData } from "@/app/home.interface";
 import { SearchResponse } from "./search.interface";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
 
 export async function searchProductsAction(query: string): Promise<AllproductsData[]> {
   const q = query ? query.trim().toLowerCase() : "";
