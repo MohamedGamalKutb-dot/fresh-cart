@@ -113,6 +113,9 @@ Authentication uses NextAuth.js (v4) with credentials centralization.
 - **Configuration:** `src/components/NextAuth/NextAuth.ts`
 - **Server Data Retrieval:** `await getServerSession(authOptions)`
 - **Client Data Retrieval:** `useSession()` from `next-auth/react`
+- **Social Logins (Google/Facebook):** Authenticating via social creates a proxy "backend" account on Route API automatically.
+- **Token Decoding Rule:** The Route API does not reliably return the MongoDB `_id` upon signin. The NextAuth `jwt` callback must extract the actual `_id` by decoding the JWT Base64 payload instead of relying on the response object, ensuring downstream queries (like `/orders/user/:id`) don't fail silently.
+- **Guest Cart Migration:** When a user logs in (either via credentials or social providers), `CartContext` intercepts the transition and automatically pushes any `guestCart` items to the authenticated backend cart via `addProductToCart`. This prevents cart evaporation upon login.
 - **Post-Login Reset Rule:** After signing in on the client, you must trigger a full page reload by using `window.location.assign("/")` instead of `router.push("/")`. This securely syncs API state (Cart, Wishlist headers relying on `token`).
 
 ---
@@ -148,6 +151,7 @@ npm run build
 - **React Compiler:** Enabled strictly in production to bypass development CPU drains.
 - **Image Optimization:** Strictly use `next/image` (`<Image />`); natively prevents CLS shifts.
 - **Environment variables:** Maintain secure `NEXT_PUBLIC_BASE_URL` contexts inside both `.env.development` and `.env.production`.
+- **Server Actions Error Masking:** In Next.js Production mode, uncaught `throw new Error()` inside `"use server"` actions will be masked to the client as `"An error occurred in the Server Components render"`. To deliver exact backend API validation messages (e.g., inside Checkout), Server Actions must safely return `{ error: string }` instead of throwing, allowing the Client Component to toast the exact UI message.
 
 ---
 
@@ -169,3 +173,7 @@ npm run build
 6. **3D Cards Context:** Flipping models driven by `perspective` globals on `ProductCard` clicks.
 7. **Cart Feedback:** Success overlays + dynamic disabling overlay on bulk operations active.
 8. **Auth Redesign:** Polished `Forgot Password` flows incorporating floating cards + pulsing load indicators.
+9. **Auth API Token Decoding:** Intercepted NextAuth pipeline to forcefully parse missing MongoDB IDs direct from Route's JWT token.
+10. **Guest Cart Migration Protocol:** Built auto-merging infrastructure migrating localstorage products directly to Cloud accounts on auth state change.
+11. **Next.js Cache Bypassing:** Integrated `cache: no-store` directives for Orders endpoint preventing Next.js 14 from blanking identical dynamic fetch params post-checkout.
+12. **Next.js Production Error Mitigation:** Restructured heavily nested `createCashOrder` actions to safely output descriptive JSON bounds blocking masking cascades.
