@@ -21,10 +21,15 @@ export async function getRelatedProductsAction(
   categoryId: string,
   currentProductId: string
 ): Promise<AllproductsData[]> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com'}/api/v1/products?category[in]=${categoryId}&limit=10`,
-    { next: { revalidate: 86400 } }
-  );
-  const data: AllproductsResponse = await response.json();
-  return data.data.filter((p) => p.id !== currentProductId);
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com'}/api/v1/products?category[in]=${categoryId}&limit=10`,
+      { next: { revalidate: 86400 } }
+    );
+    if (!response.ok) return [];
+    const data: AllproductsResponse = await response.json();
+    return (data?.data || []).filter((p) => p.id !== currentProductId);
+  } catch (error) {
+    return [];
+  }
 }
