@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { ShieldCheck, Star, Users } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // ─── Trust badges ──────────────────────────────────────────────────────────────
 export const TRUST_BADGES = [
@@ -13,6 +13,9 @@ export const TRUST_BADGES = [
 
 export function useLoginLogic() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams?.get("callbackUrl") || "/";
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +55,7 @@ export function useLoginLogic() {
       }
 
       toast.success("Welcome back!");
-     location.assign("/");
+      location.assign(callbackUrl);
     } catch (err) {
       setIsSubmitting(false);
       toast.dismiss(toastId);
@@ -65,7 +68,7 @@ export function useLoginLogic() {
     if (e && e.preventDefault) e.preventDefault();
     const toastId = toast.loading("Connecting to Google...");
     try {
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { callbackUrl });
     } catch (err) {
       toast.dismiss(toastId);
       toast.error("Google sign in failed. Please try again.");
@@ -76,7 +79,7 @@ export function useLoginLogic() {
     if (e && e.preventDefault) e.preventDefault();
     const toastId = toast.loading("Connecting to Facebook...");
     try {
-      await signIn("facebook", { callbackUrl: "/" });
+      await signIn("facebook", { callbackUrl });
     } catch (err) {
       toast.dismiss(toastId);
       toast.error("Facebook sign in failed. Please try again.");
