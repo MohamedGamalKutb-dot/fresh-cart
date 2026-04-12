@@ -73,8 +73,9 @@ export const authOptions: NextAuthOptions = {
       if ((account?.provider === "google" || account?.provider === "facebook") && user) {
         try {
           const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
+          const safeEmail = user.email || `${user.id}@${account.provider}.com`;
           // Deterministic safe password based on email
-          const safeEmailHash = Buffer.from(user.email).toString("base64").replace(/[^a-zA-Z0-9]/g, "").substring(0, 8);
+          const safeEmailHash = Buffer.from(safeEmail).toString("base64").replace(/[^a-zA-Z0-9]/g, "").substring(0, 8);
           const dummyPassword = `G@${safeEmailHash}123!`;
 
           // Generate a valid 11-digit temporary phone number (e.g. 010 + 8 random digits)
@@ -86,7 +87,7 @@ export const authOptions: NextAuthOptions = {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               name: user.name || "Google User",
-              email: user.email,
+              email: safeEmail,
               password: dummyPassword,
               rePassword: dummyPassword,
               phone: randomPhone,
@@ -101,7 +102,7 @@ export const authOptions: NextAuthOptions = {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                email: user.email,
+                email: safeEmail,
                 password: dummyPassword,
               }),
             });
