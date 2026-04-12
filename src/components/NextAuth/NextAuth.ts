@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
       // 2. If it's a Social login (Google or Facebook), we need to "sync" with the backend to get a valid Route token
       if ((account?.provider === "google" || account?.provider === "facebook") && user) {
         try {
-          const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+          const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
           // Deterministic safe password based on email
           const safeEmailHash = Buffer.from(user.email).toString("base64").replace(/[^a-zA-Z0-9]/g, "").substring(0, 8);
           const dummyPassword = `G@${safeEmailHash}123!`;
