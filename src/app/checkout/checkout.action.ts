@@ -17,7 +17,7 @@ export async function createCashOrderFromCartV2Action(cartId: string, shippingAd
   
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || "Failed to create cash order (v2)");
+    return { error: data.message || "Failed to create cash order (v2)" };
   }
   return data;
 }
@@ -57,7 +57,7 @@ export async function createCheckoutSessionAction(cartId: string, shippingAddres
   
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || "Failed to create checkout session");
+    return { error: data.message || "Failed to create checkout session" };
   }
   return data;
 }

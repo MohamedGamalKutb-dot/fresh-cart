@@ -134,13 +134,17 @@ export function useCheckoutLogic() {
       }
 
       if (paymentMethod === "cash") {
-        await createCashOrderFromCartV2(cart._id, addressData, token);
+        const res = await createCashOrderFromCartV2(cart._id, addressData, token);
+        if (res?.error) throw new Error(res.error);
+        
         await clearCart();
         toast.success("Order placed successfully!", { id: toastId });
         router.push("/allorders");
       } else if (paymentMethod === "card") {
         const returnUrl = `${window.location.origin}/allorders`;
         const res = await createCheckoutSession(cart._id, addressData, token, returnUrl);
+        if (res?.error) throw new Error(res.error);
+        
         toast.dismiss(toastId);
         if (res.status === "success" && res.session?.url) {
           window.location.href = res.session.url;
