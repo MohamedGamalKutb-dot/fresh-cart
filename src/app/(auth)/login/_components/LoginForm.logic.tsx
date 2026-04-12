@@ -63,7 +63,6 @@ export function useLoginLogic() {
 
   async function handleGoogleSignIn(e?: any) {
     if (e && e.preventDefault) e.preventDefault();
-    if (typeof window !== "undefined") alert("Google Button Clicked - Starting Sign In...");
     const toastId = toast.loading("Connecting to Google...");
     try {
       await signIn("google", { callbackUrl: "/" });
@@ -75,7 +74,6 @@ export function useLoginLogic() {
 
   async function handleFacebookSignIn(e?: any) {
     if (e && e.preventDefault) e.preventDefault();
-    if (typeof window !== "undefined") alert("Facebook Button Clicked - Starting Sign In...");
     const toastId = toast.loading("Connecting to Facebook...");
     try {
       await signIn("facebook", { callbackUrl: "/" });
