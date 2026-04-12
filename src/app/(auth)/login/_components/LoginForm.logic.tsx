@@ -62,17 +62,21 @@ export function useLoginLogic() {
   }
 
   async function handleGoogleSignIn() {
+    const toastId = toast.loading("Connecting to Google...");
     try {
-      await signIn("google", { redirectTo: "/" });
+      await signIn("google", { callbackUrl: "/" });
     } catch (err) {
+      toast.dismiss(toastId);
       toast.error("Google sign in failed. Please try again.");
     }
   }
 
   async function handleFacebookSignIn() {
+    const toastId = toast.loading("Connecting to Facebook...");
     try {
-      await signIn("facebook", { redirectTo: "/" });
+      await signIn("facebook", { callbackUrl: "/" });
     } catch (err) {
+      toast.dismiss(toastId);
       toast.error("Facebook sign in failed. Please try again.");
     }
   }

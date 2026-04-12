@@ -7,16 +7,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemis
 export async function getUserOrdersAction(userId: string): Promise<Order[]> {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/orders/user/${userId}`);
+    if (!response.ok) return [];
     const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to fetch orders");
-    }
-    
-    return data;
+    return data || [];
   } catch (error) {
     console.error("Error fetching user orders:", error);
-    throw error;
+    return [];
   }
 }
 

@@ -2,27 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Order } from "../orders.interface";
 import { getUserOrders } from "../orders.services";
 
 export function useOrdersLogic() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedOrders, setExpandedOrders] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+      return;
+    }
+
+    if (status === "loading") return;
+
     const fetchOrders = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          router.push("/login");
-          return;
-        }
-
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const userId = payload.id;
+        const userId = session?.user?.id;
+        if (!userId) return;
 
         const data = await getUserOrders(userId);
 
@@ -43,7 +46,7 @@ export function useOrdersLogic() {
     };
 
     fetchOrders();
-  }, [router]);
+  }, [router, status, session]);
 
   const toggleOrder = (orderId: number) => {
     setExpandedOrders(prev => ({
