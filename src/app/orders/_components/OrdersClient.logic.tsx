@@ -24,7 +24,7 @@ export function useOrdersLogic() {
 
     const fetchOrders = async () => {
       try {
-        const userId = session?.user?.id;
+        const userId = (session?.user as any)?.id;
         if (!userId) return;
 
         const data = await getUserOrders(userId);
