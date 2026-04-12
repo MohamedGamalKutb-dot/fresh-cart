@@ -44,7 +44,7 @@ export default function LoginForm() {
       <div className="flex flex-col gap-3 w-full mb-5">
         <button
           type="button"
-          onClick={handleGoogleSignIn}
+          onClick={(e) => handleGoogleSignIn(e)}
           className="flex items-center justify-center gap-2.5 h-11 rounded-xl border border-[#E9ECEF] bg-white hover:bg-[#F8F9FA] transition-colors text-sm font-medium text-[#212529] w-full"
         >
           <svg className="size-4 flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
@@ -58,7 +58,7 @@ export default function LoginForm() {
 
         <button
           type="button"
-          onClick={handleFacebookSignIn}
+          onClick={(e) => handleFacebookSignIn(e)}
           className="flex items-center justify-center gap-2.5 h-11 rounded-xl border border-[#E9ECEF] bg-white hover:bg-[#F8F9FA] transition-colors text-sm font-medium text-[#212529] w-full"
         >
           <svg className="size-4 flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
