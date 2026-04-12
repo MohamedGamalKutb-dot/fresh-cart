@@ -25,11 +25,20 @@ export const authOptions: NextAuthOptions = {
           const data = await res.json();
           
           if (res.ok && data.token) {
+            let userId = data.user?._id;
+            try {
+              const payload = data.token.split('.')[1];
+              const decoded = JSON.parse(Buffer.from(payload, 'base64').toString('utf-8'));
+              userId = decoded.id || userId;
+            } catch (e) {
+              console.error("Failed to decode token for ID", e);
+            }
+            
             // Include token and basic user info
             return {
-              id: data.user._id,
-              name: data.user.name,
-              email: data.user.email,
+              id: userId || "",
+              name: data.user?.name,
+              email: data.user?.email,
               token: data.token,
             };
           }
