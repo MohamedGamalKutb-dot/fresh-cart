@@ -2,7 +2,7 @@ import { ProductDetailsData } from "./productDetails.interface";
 import { AllproductsData } from "@/app/home.interface";
 import { getProductDetailsAction, getRelatedProductsAction } from "./productDetails.action";
 
-export async function getProductDetails(id: string): Promise<ProductDetailsData> {
+export async function getProductDetails(id: string): Promise<ProductDetailsData | null> {
   return await getProductDetailsAction(id);
 }
 
