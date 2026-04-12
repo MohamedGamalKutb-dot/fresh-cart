@@ -56,13 +56,49 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Sync token to localStorage for backward compatibility with legacy logic
       localStorage.setItem("token", token);
       
-      getLoggedUserCart(token)
-        .then((res) => {
+      const syncGuestCart = async () => {
+        const stored = localStorage.getItem("guestCart");
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const syncToast = toast.loading("Syncing your items...");
+              // Sequentially add guest items to API cart to prevent race conditions
+              for (const item of parsed) {
+                try {
+                  await addProductToCart(item.product.id, token);
+                  // Update count if > 1
+                  if (item.count > 1) {
+                    await updateCartProductQuantity(item.product.id, item.count, token);
+                  }
+                } catch (e) {
+                  // ignore individual add failures
+                }
+              }
+              toast.dismiss(syncToast);
+              toast.success("Items merged into your account!");
+            }
+          } catch(e) {}
+          // Clear guest cart once an attempt to sync is made
+          localStorage.removeItem("guestCart");
+          setGuestCart([]);
+        }
+
+        // Fetch final cart
+        try {
+          const res = await getLoggedUserCart(token);
           if (res.status === "success" && res.data) {
             setCart(res.data);
+          } else {
+            setCart(null);
           }
-        })
-        .catch((err) => console.error("Failed to load user cart from API", err));
+        } catch (err) {
+          console.error("Failed to load user cart from API", err);
+          setCart(null);
+        }
+      };
+
+      syncGuestCart();
     } else {
       // Only clear if we were previously logged in or intended to be guest
       // localStorage.removeItem("token"); // Optional: depend on logout logic
