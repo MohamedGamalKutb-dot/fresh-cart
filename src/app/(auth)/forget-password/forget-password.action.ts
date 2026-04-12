@@ -10,7 +10,7 @@ import {
 } from "./forget-password.interface";
 import { cookies } from "next/headers";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
 
 export async function forgotPasswordAction(payload: ForgotPasswordPayload): Promise<{ success: boolean; message: string }> {
   try {

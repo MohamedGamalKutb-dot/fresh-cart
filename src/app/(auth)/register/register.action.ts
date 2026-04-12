@@ -8,7 +8,7 @@ import {
 } from "./register.interface";
 import { cookies } from "next/headers";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
 
 function extractRegisterError(payload: RegisterErrorResponse): string {
   if (payload.errors?.[0]?.msg) return payload.errors[0].msg;

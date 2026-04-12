@@ -8,7 +8,7 @@ import {
 } from "./login.interface";
 import { cookies } from "next/headers";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://ecommerce.routemisr.com';
 
 function extractAuthError(payload: AuthErrorResponse): string {
   if (payload.errors?.[0]?.msg) return payload.errors[0].msg;
