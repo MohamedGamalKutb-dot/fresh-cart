@@ -139,9 +139,9 @@ export function useCheckoutLogic() {
         
         await clearCart();
         toast.success("Order placed successfully!", { id: toastId });
-        router.push("/allorders");
+        window.location.assign("/allorders");
       } else if (paymentMethod === "card") {
-        const returnUrl = `${window.location.origin}/allorders`;
+        const returnUrl = `${window.location.origin}`;
         const res = await createCheckoutSession(cart._id, addressData, token, returnUrl);
         if (res?.error) throw new Error(res.error);
         

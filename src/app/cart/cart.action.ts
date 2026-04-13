@@ -13,6 +13,7 @@ export async function getLoggedUserCartAction(token: string): Promise<CartRespon
     headers: {
       token: token,
     },
+    cache: "no-store"
   });
   return res.json();
 }

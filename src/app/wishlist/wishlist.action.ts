@@ -41,6 +41,7 @@ export async function getLoggedUserWishlistAction(token: string) {
       "Content-Type": "application/json",
       token: token,
     },
+    cache: "no-store"
   });
   return res.json();
 }
